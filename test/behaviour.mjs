@@ -113,12 +113,38 @@ assert.deepEqual(
 // Slot occupancy follows artwork availability. A registered occupant replaces
 // the shell's fallback even when it renders nothing, so an unconditional
 // registration would blank the sidebar brand name.
+//
+// The double is strict about the two rules the shipped registry enforces, so
+// this block cannot pass on wiring that would throw in a real boot: a seat must
+// be declared before it is registered, and a `single` seat takes one entry per
+// priority. Declared here, occupied by a stand-in for `ui-brand-official`, so
+// the plugin has to shadow rather than collide.
 {
+  const declared = new Set(['settings.general.item', 'conversation.hero.brand.mark'])
+  const occupied = new Map()
+  for (const seat of ['sidebar.brand.mark', 'sidebar.brand.name']) {
+    declared.add(seat)
+    occupied.set(seat, new Set([0]))
+  }
   const registered = []
   const ctx = {
     slots: {
-      register: (definition) => registered.push(definition.name),
-      inject: (_key, callback) => callback()
+      register: (definition, component) => {
+        if (!declared.has(definition.name)) {
+          throw new Error(`slot "${definition.name}" is not declared`)
+        }
+        const priority = definition.priority ?? 0
+        const cells = occupied.get(definition.name) ?? new Set()
+        if (cells.has(priority)) {
+          throw new Error(`single slot "${definition.name}" already has a registration at priority ${priority}`)
+        }
+        cells.add(priority)
+        occupied.set(definition.name, cells)
+        registered.push([definition.name, priority, component])
+      },
+      inject: (key, callback) => {
+        if (declared.has(key)) callback()
+      }
     },
     theme: { overrideTokens: () => () => {} },
     effect: (fn) => fn(),
@@ -127,20 +153,30 @@ assert.deepEqual(
   }
   moduleExports.apply(ctx)
   // The settings row is a separate seat that is always contributed. Each brand
-  // slot is taken only when there is artwork for it, since occupying a `single`
-  // slot suppresses the shell's fallback — registering without an image would
+  // seat is taken only when there is artwork for it, since occupying a `single`
+  // seat suppresses the shell's fallback — registering without an image would
   // leave the row emptier than the shipped occupant did. The mark is taken and
   // the name is not: the whale is replaced while "deepseek HARNESS" stays.
-  const slots = registered.filter((name) => name !== 'settings.general.item').sort()
+  const slots = registered
+    .filter(([name]) => name !== 'settings.general.item')
+    .map(([name]) => name)
+    .sort()
   const expected = []
   if (moduleExports.ART.mark !== null) {
-    // The two sidebar slots move together: resolution is first-wins per slot,
-    // so contributing one half would leave the other with the disabled row.
+    // The two sidebar seats move together: they are one brand row, so
+    // contributing one half would leave the other with the shipped occupant.
     expected.push('sidebar.brand.mark', 'sidebar.brand.name')
   }
   if (moduleExports.ART.hero !== null) expected.push('conversation.hero.brand.mark')
-  assert.deepEqual(slots, expected.sort(), 'occupies exactly the brand slots it has artwork for')
-  assert.ok(registered.includes('settings.general.item'), 'always contributes its settings row')
+  assert.deepEqual(slots, expected.sort(), 'occupies exactly the brand seats it has artwork for')
+  for (const [name, priority] of registered) {
+    if (name === 'settings.general.item') continue
+    assert.equal(priority, -1, `${name} shadows the shipped occupant instead of colliding with it`)
+  }
+  assert.ok(
+    registered.some(([name]) => name === 'settings.general.item'),
+    'always contributes its settings row'
+  )
 }
 assert.deepEqual(moduleExports.inject, ['theme', 'slots', 'locale'], 'declares its service dependencies')
 assert.equal(typeof moduleExports.apply, 'function', 'exports apply')
@@ -271,6 +307,16 @@ function boot() {
   })
   let slot
   const effects = []
+  // The seats this plugin fills are declared by other packages, and the two
+  // sidebar brand seats already hold the shipped occupant: the double enforces
+  // both rules, so a boot that would throw in the shell throws here first.
+  const declared = new Set([
+    'settings.general.item',
+    'sidebar.brand.mark',
+    'sidebar.brand.name',
+    'conversation.hero.brand.mark'
+  ])
+  const claimed = new Set(['sidebar.brand.mark:0', 'sidebar.brand.name:0'])
   const ctx = {
     theme,
     effect(fn) {
@@ -286,11 +332,19 @@ function boot() {
     },
     locale: { register() {} },
     slots: {
-      inject(_key, callback) {
-        callback()
+      inject(key, callback) {
+        if (declared.has(key)) callback()
       },
-      register(definition) {
-        slot = definition
+      register(definition, component) {
+        if (!declared.has(definition.name)) {
+          throw new Error(`slot "${definition.name}" is not declared`)
+        }
+        const cell = `${definition.name}:${definition.priority ?? 0}`
+        if (claimed.has(cell)) {
+          throw new Error(`single slot "${definition.name}" already has a registration at priority ${definition.priority ?? 0}`)
+        }
+        claimed.add(cell)
+        if (definition.name === 'settings.general.item') slot = definition
       }
     }
   }

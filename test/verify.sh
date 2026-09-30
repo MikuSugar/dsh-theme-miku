@@ -49,6 +49,9 @@ console.log("ok   package.json + bundle id agree")
 step "client behaviour"
 node "$HERE/behaviour.mjs" || fail=1
 
+step "seat occupancy across boot orders"
+node "$HERE/slots.mjs" || fail=1
+
 step "brand occupants and profile wiring"
 node "$HERE/wiring.mjs" || fail=1
 

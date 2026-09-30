@@ -30,13 +30,11 @@ git clone https://github.com/MikuSugar/dsh-theme-miku.git ~/dsh-theme-miku
 - insert:
     - id: dsh-theme-miku
       name: /Users/you/dsh-theme-miku/lib/index.js
-
-# 侧边栏品牌位是 single 槽、先注册者胜出，插件整行接管 mark + name，
-# 所以要让官方品牌行让位（该包 README 给出的正是这条替换路线）
-- id: ui-brand-official
-  name: "@deepseek-ai/dsh-client-ui-brand-official"
-  disabled: true
 ```
+
+**不需要**再停掉 `ui-brand-official`。品牌槽是 `single`，插件以更低的注册优先级
+**遮蔽**官方占用者（`priority: -1`，槽位注册表定义的「lowest renders」），官方行照旧
+挂载——主题关掉时侧边栏仍然有品牌，而不是空一块。
 
 **3. 保存即可**
 
@@ -59,9 +57,10 @@ git clone https://github.com/MikuSugar/dsh-theme-miku.git ~/dsh-theme-miku
 ├── tools/
 │   └── build-art.mjs            把 art/ 里的图内联进 bundle（见下）
 ├── test/
-│   ├── verify.sh                离线自检（语法 / 声明 / token / 行为 / profile 接线）
+│   ├── verify.sh                离线自检（语法 / 声明 / token / 行为 / 槽位 / profile 接线）
 │   ├── behaviour.mjs            行为断言：主题服务替身 + 用户可观察状态
-│   └── wiring.mjs               品牌槽占用与 profile patch 断言
+│   ├── slots.mjs                槽位占用：注册时机（声明前/后）与官方占用者共存
+│   └── wiring.mjs               品牌槽接线与 profile patch 断言
 ├── art/
 │   ├── hero.png / mark.png      立绘原图（构建输入）
 │   ├── preview-*.png            效果预览
@@ -148,15 +147,24 @@ token 图层表达不了的部分放在 `body[data-dsh-miku]` 作用域下，属
 `art/preview-app.png` 是实际界面截图（浅色），`art/preview-sidebar.png` 是侧边栏底图
 在深浅两色下的对照，`art/preview-ui.png` 是配色与舞台光的界面模拟。
 
-### 为什么整行一起换
+### 为什么整行一起换，以及为什么不动官方品牌行
 
-三个槽都是 `single` 类型，解析规则是**第一个注册者胜出**（同优先级按注册顺序）。
-所以整行必须一起接管：profile patch 里把 `ui-brand-official` 设为 `disabled: true`，
-插件同时贡献 mark 与 name。反过来说，如果只抢一个槽，另一半可能仍归官方占用者——
-甚至两个注册者共存时，"谁赢" 取决于加载顺序而不是代码意图。
+三个槽都是 `single`，一个槽只有一格。槽位注册表对同优先级重复注册**直接抛错**，
+对还没被声明的槽注册也**直接抛错**——两条都在插件 `apply()` 期间发生，而浏览器启动
+把「有 client entry 没激活」当作致命错误（`web boot: N entries did not activate`，
+桌面端弹崩溃框）。所以品牌位这一段是插件里最容易把应用带崩的地方，现在的接线是：
 
-这正是官方包 README 给出的替换路线：「A deployment with its own identity leaves this
-package out and composes another package that occupies the sidebar slots」。
+- **整行一起接管**：mark 与 name 是一个品牌行，只抢一格会让另一半仍归官方占用者，
+  同一行两套视觉；
+- **遮蔽而非顶替**：以 `priority: -1` 注册，官方占用者继续挂载，只是不再是渲染赢家。
+  profile patch 不需要 `disabled: true`，主题关掉时侧边栏也不会空一块；
+- **等声明落地**：每个槽都经 `ctx.slots.inject(name, …)` 注册——槽已声明就立即执行，
+  未声明则等声明者，激活顺序因此不再是插件的事；
+- **失败只丢一层**：每一层都经 `guard()` 挂载，某一层接线失败只在控制台留一条警告，
+  其余层照常（主题是装饰，不该有能力挡住启动）。
+
+`test/slots.mjs` 把声明前/声明后 × 有/无官方占用者四种顺序都跑了一遍，另外模拟
+「主题服务契约变了」「槽位注册表契约变了」两种漂移——断言的都是 `apply()` 不抛异常。
 
 ### mark 的比例
 
@@ -180,7 +188,7 @@ package out and composes another package that occupies the sidebar slots」。
 比例决定**：竖版源图在这里只有 110px 宽，横版能占到约 280px，这是这张图是否好看
 的决定性因素（`art/README.md` 里给了横版提示词）。
 
-关掉官方品牌行之后，槽里的回退逻辑仍然有效：素材缺失时自动退回原生图形，不会开天窗。
+素材缺失时槽位完全不动，回退逻辑照常生效，不会开天窗。
 
 ### 素材怎么进来
 
@@ -250,8 +258,9 @@ hero 插画同时作为侧边栏底图，贴底居中、**向上渐隐**（96% �
 ```
 
 离线运行，不需要浏览器或 DSH 进程。其中 profile 那一半是**环境相关**的——检查你的
-`cordis.patch.yml` 是否挂载了本插件、是否让官方品牌行让位——未安装时它会打印
-`skip profile wiring` 而不是失败，所以新克隆的仓库直接跑也是绿的。
+`cordis.patch.yml` 是否挂载了本插件、挂载的文件是否存在、有没有多此一举地去禁用
+官方品牌行——未安装时它会打印 `skip profile wiring` 而不是失败，所以新克隆的仓库
+直接跑也是绿的。
 
 CI 见 [`.github/workflows/verify.yml`](.github/workflows/verify.yml)。
 
@@ -259,7 +268,30 @@ CI 见 [`.github/workflows/verify.yml`](.github/workflows/verify.yml)。
 
 两个 bundle 的语法、`package.json` 与浏览器半模块名一致、token 图层通过主题服务的
 `{light,dark}` 校验、17 项用户可观察行为（挂载、两个开关、系统深浅色切换、外观色块、
-关闭背景光、卸载回收）、品牌槽占用与 profile 接线，以及 Host 半的挂载与卸载。
+关闭背景光、卸载回收）、4 种激活顺序下的槽位占用与「赢家是谁」、两种服务契约漂移下
+`apply()` 不抛异常、品牌槽接线与 profile 接线，以及 Host 半的挂载与卸载。
+
+槽位那一套是这次崩溃换来的：注册时机和优先级写错都会让 `apply()` 抛异常，而浏览器
+启动把失败 entry 当致命错误——桌面端直接弹「应用无法启动」。见
+[`test/slots.mjs`](test/slots.mjs)。
+
+### 端到端验证（需要装了 DSH）
+
+离线那套验证不了「真实启动顺序」，所以改动接线后建议再跑一遍真机：
+
+```bash
+# 1. 用一个临时 overlay 把插件挂进 web profile，另起一个端口
+printf -- '- insert:\n    - id: dsh-theme-miku\n      name: %s/lib/index.js\n' "$PWD" > /tmp/miku.yml
+"/Applications/DeepSeek Harness.app/Contents/Resources/runtime/bin/node" \
+  "/Applications/DeepSeek Harness.app/Contents/Resources/app.asar/dsh/node_modules/@deepseek-ai/dsh/lib/bin.js" \
+  --profile web --patch /tmp/miku.yml --port 19487 --no-open
+
+# 2. 用启动时打印的带 token 的地址打开（浏览器手点也行），
+#    页面底部不应出现 "Failed to load plugins"，侧边栏品牌位应是插件素材。
+```
+
+失败时页面会停在启动卡片上并写出 `web boot: N entries did not activate`——
+那正是桌面端崩溃框里的那句话。
 
 ## 许可
 
