@@ -5,7 +5,9 @@
 青绿 × 品红的双色配色，浅色与深色各一套完整调色板；侧边栏底图；舞台光背景；
 新会话首页与侧边栏品牌位的立绘。
 
-![侧边栏](art/preview-sidebar.png)
+![初音未来主题](art/preview-app.png)
+
+*浅色配色下的实际界面：侧边栏品牌位换成两人头像、底部水印、新会话页 hero 插画。*
 
 ## 安装
 
@@ -143,8 +145,8 @@ token 图层表达不了的部分放在 `body[data-dsh-miku]` 作用域下，属
 | `sidebar.brand.name` | 侧边栏品牌行右侧 | 官方 `deepseek HARNESS` 字标（复用 primitives 组件，未重绘） |
 | `conversation.hero.brand.mark` | **新会话空白页**标题左侧 | hero 插画，绘制高 128px |
 
-`art/preview-ui.png` 是配色与舞台光的界面模拟，`art/preview-sidebar.png` 是侧边栏
-底图在深浅两色下的实际效果。
+`art/preview-app.png` 是实际界面截图（浅色），`art/preview-sidebar.png` 是侧边栏底图
+在深浅两色下的对照，`art/preview-ui.png` 是配色与舞台光的界面模拟。
 
 ### 为什么整行一起换
 
