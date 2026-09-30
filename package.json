@@ -1,0 +1,36 @@
+{
+  "name": "dsh-theme-miku",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Hatsune Miku theme for the DeepSeek Harness Web GUI: two registered palettes (miku / miku-dark), neon-glass surfaces and a General-settings toggle row.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "default": "./lib/client.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "~4.0.4"
+  },
+  "dsh": {
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-theme"
+      ],
+      "external": [
+        "@deepseek-ai/dsh-client-store",
+        "@deepseek-ai/dsh-client-ui-primitives"
+      ]
+    }
+  }
+}

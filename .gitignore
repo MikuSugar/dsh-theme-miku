@@ -1,0 +1,7 @@
+# Build output: lib/art.js is written by tools/build-art.mjs, which also weaves
+# the same data URIs into lib/client.js. The bundle is committed (so a clone runs
+# without a build step), the standalone copy would only duplicate ~900 KB.
+lib/art.js
+
+node_modules/
+.DS_Store

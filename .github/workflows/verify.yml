@@ -1,0 +1,19 @@
+name: verify
+
+# The self-test is offline by construction: it parses both halves, replays the
+# theme service against the bundle, and checks the token layer. The profile half
+# of the wiring check skips itself when no profile is installed, which is exactly
+# the situation on a runner.
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: ./test/verify.sh

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<title>初音未来主题 · 调色板预览</title>
+<style>
+  html { color-scheme: light dark; }
+  body { margin: 0; font: 14px/1.6 -apple-system, "PingFang SC", "Helvetica Neue", sans-serif; }
+  .wrap { display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh; }
+  .side { padding: 32px 36px; }
+  .side.light { --dsw-alias-bg-base: #f4fbfe; --dsw-alias-bg-layer-1: #f4fbfe; --dsw-alias-bg-layer-2: #f4fbfe; --dsw-specific-sidebar-fill: #eef7fb; --dsw-alias-label-primary: #0d1c25; --dsw-alias-label-secondary: #3a5f70; --dsw-alias-label-tertiary: #4a7487; --dsw-alias-brand-primary: #1a9aa5; --dsw-alias-button-primary-fill: #1a9aa5; --dsw-alias-link: #1a9aa5; --dsw-specific-bubble: #e9f9fb; --dsw-specific-bubble-highlight: #bdeef3; --dsw-alias-markdown-code-block: #edf7fb; --dsw-alias-markdown-inline-code: #eaf8fa; --dsw-specific-sidebar-nav-item-active: #cfe7f1; --dsw-specific-sidebar-nav-item-hover: #dbedf5; --dsw-alias-state-success-primary: #18a869; --dsw-alias-state-warn-primary: #d98718; --dsw-alias-state-error-primary: #c4186d; --dsw-alias-border-l2: #0d1c251a; }
+  .side.dark { --dsw-alias-bg-base: #0a141a; --dsw-alias-bg-layer-1: #16272f; --dsw-alias-bg-layer-2: #1d333c; --dsw-specific-sidebar-fill: #0e1f27; --dsw-alias-label-primary: #e9f7fb; --dsw-alias-label-secondary: #8fc3d2; --dsw-alias-label-tertiary: #6fa4b6; --dsw-alias-brand-primary: #39c5cf; --dsw-alias-button-primary-fill: #39c5cf; --dsw-alias-link: #4bcbd8; --dsw-specific-bubble: #16272f; --dsw-specific-bubble-highlight: #264049; --dsw-alias-markdown-code-block: #101d24; --dsw-alias-markdown-inline-code: #111c22; --dsw-specific-sidebar-nav-item-active: #264049; --dsw-specific-sidebar-nav-item-hover: #1a3038; --dsw-alias-state-success-primary: #1eb981; --dsw-alias-state-warn-primary: #e8a133; --dsw-alias-state-error-primary: #f4629f; --dsw-alias-border-l2: #39c5cf24; }
+  .side { background: var(--dsw-alias-bg-base); color: var(--dsw-alias-label-primary); }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  h2 { font-size: 13px; font-weight: 500; color: var(--dsw-alias-label-tertiary); margin: 26px 0 10px; letter-spacing: .04em; }
+  .sub { color: var(--dsw-alias-label-tertiary); font-size: 12px; margin: 0 0 22px; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { display: flex; align-items: center; gap: 10px; padding: 3px 0; font-size: 13px; }
+  .chip { width: 22px; height: 22px; border-radius: 6px; box-shadow: inset 0 0 0 .5px var(--dsw-alias-border-l2); flex: none; }
+  .nm { flex: 1; min-width: 0; }
+  code { font: 11px/1 ui-monospace, "SF Mono", Menlo, monospace; color: var(--dsw-alias-label-tertiary); }
+  .demo { border: .5px solid var(--dsw-alias-border-l2); border-radius: 14px; padding: 16px; background: var(--dsw-alias-bg-layer-1); }
+  .bubble { background: var(--dsw-specific-bubble); border-radius: 12px; padding: 10px 14px; margin-bottom: 10px; }
+  .mine { background: var(--dsw-specific-bubble-highlight); }
+  .btn { background: var(--dsw-alias-button-primary-fill); color: #f4fbfe; border: none; border-radius: 8px; padding: 7px 14px; font: inherit; font-size: 13px; }
+  .side.dark .btn { color: #050c10; }
+  a { color: var(--dsw-alias-link); }
+  .state { display: flex; gap: 8px; margin-top: 10px; font-size: 12px; }
+  .state span { padding: 3px 9px; border-radius: 999px; color: #fff; }
+  pre { background: var(--dsw-alias-markdown-code-block); border-radius: 10px; padding: 12px; margin: 10px 0 0; overflow: hidden; font: 11px/1.7 ui-monospace, Menlo, monospace; }
+  pre b { color: #c4186d; font-weight: 500; }
+  pre i { color: #1f7a52; font-style: normal; }
+  .side.dark pre b { color: #f4629f; }
+  .side.dark pre i { color: #6fdfae; }
+  .tag { display: inline-block; background: var(--dsw-alias-markdown-inline-code); border-radius: 5px; padding: 1px 6px; font: 11px ui-monospace, Menlo, monospace; }
+</style></head>
+<body><div class="wrap">
+  <section class="side light">
+    <h1>初音未来主题 · 浅色</h1>
+    <p class="sub">Miku Light &nbsp;|&nbsp; 21 个关键 token（共 187 个）</p>
+    <ul>
+      <li><span class="chip" style="background:#f4fbfe"></span><span class="nm">底色 base</span><code>#f4fbfe</code></li>
+      <li><span class="chip" style="background:#f4fbfe"></span><span class="nm">一级面 layer-1</span><code>#f4fbfe</code></li>
+      <li><span class="chip" style="background:#f4fbfe"></span><span class="nm">二级面 layer-2</span><code>#f4fbfe</code></li>
+      <li><span class="chip" style="background:#eef7fb"></span><span class="nm">侧边栏 sidebar</span><code>#eef7fb</code></li>
+      <li><span class="chip" style="background:#0d1c25"></span><span class="nm">主要文字</span><code>#0d1c25</code></li>
+      <li><span class="chip" style="background:#3a5f70"></span><span class="nm">次要文字</span><code>#3a5f70</code></li>
+      <li><span class="chip" style="background:#4a7487"></span><span class="nm">三级文字</span><code>#4a7487</code></li>
+      <li><span class="chip" style="background:#1a9aa5"></span><span class="nm">品牌青绿</span><code>#1a9aa5</code></li>
+      <li><span class="chip" style="background:#1a9aa5"></span><span class="nm">按钮填充</span><code>#1a9aa5</code></li>
+      <li><span class="chip" style="background:#1a9aa5"></span><span class="nm">链接</span><code>#1a9aa5</code></li>
+      <li><span class="chip" style="background:#e9f9fb"></span><span class="nm">对话气泡</span><code>#e9f9fb</code></li>
+      <li><span class="chip" style="background:#bdeef3"></span><span class="nm">气泡强调</span><code>#bdeef3</code></li>
+      <li><span class="chip" style="background:#edf7fb"></span><span class="nm">代码块</span><code>#edf7fb</code></li>
+      <li><span class="chip" style="background:#eaf8fa"></span><span class="nm">行内代码</span><code>#eaf8fa</code></li>
+      <li><span class="chip" style="background:#cfe7f1"></span><span class="nm">选中态</span><code>#cfe7f1</code></li>
+      <li><span class="chip" style="background:#dbedf5"></span><span class="nm">悬停态</span><code>#dbedf5</code></li>
+      <li><span class="chip" style="background:#18a869"></span><span class="nm">成功</span><code>#18a869</code></li>
+      <li><span class="chip" style="background:#d98718"></span><span class="nm">警告</span><code>#d98718</code></li>
+      <li><span class="chip" style="background:#c4186d"></span><span class="nm">错误 / 品红</span><code>#c4186d</code></li>
+      <li><span class="chip" style="background:#39c5cf"></span><span class="nm">Miku 青 #39c5cf</span><code>#39c5cf</code></li>
+      <li><span class="chip" style="background:#e12885"></span><span class="nm">Miku 品红</span><code>#e12885</code></li>
+    </ul>
+    <h2>组件示意</h2>
+    <div class="demo">
+      <div class="bubble">你好，今天想改点什么？</div>
+      <div class="bubble mine">把主题换成初音未来。</div>
+      <div class="state">
+        <span style="background:var(--dsw-alias-state-success-primary)">成功</span>
+        <span style="background:var(--dsw-alias-state-warn-primary)">警告</span>
+        <span style="background:var(--dsw-alias-state-error-primary)">错误</span>
+      </div>
+      <pre><b>const</b> theme = <i>'miku'</i><br>surface.<span class="tag">--dsw-static-blue-450</span></pre>
+      <p><button class="btn">主按钮</button> &nbsp; <a href="#">一个链接</a></p>
+    </div>
+  </section>
+  <section class="side dark">
+    <h1>初音未来主题 · 深色</h1>
+    <p class="sub">Miku Dark &nbsp;|&nbsp; 与浅色完全相同的 token 名单</p>
+    <ul>
+      <li><span class="chip" style="background:#0a141a"></span><span class="nm">底色 base</span><code>#0a141a</code></li>
+      <li><span class="chip" style="background:#16272f"></span><span class="nm">一级面 layer-1</span><code>#16272f</code></li>
+      <li><span class="chip" style="background:#1d333c"></span><span class="nm">二级面 layer-2</span><code>#1d333c</code></li>
+      <li><span class="chip" style="background:#0e1f27"></span><span class="nm">侧边栏 sidebar</span><code>#0e1f27</code></li>
+      <li><span class="chip" style="background:#e9f7fb"></span><span class="nm">主要文字</span><code>#e9f7fb</code></li>
+      <li><span class="chip" style="background:#8fc3d2"></span><span class="nm">次要文字</span><code>#8fc3d2</code></li>
+      <li><span class="chip" style="background:#6fa4b6"></span><span class="nm">三级文字</span><code>#6fa4b6</code></li>
+      <li><span class="chip" style="background:#39c5cf"></span><span class="nm">品牌青绿</span><code>#39c5cf</code></li>
+      <li><span class="chip" style="background:#39c5cf"></span><span class="nm">按钮填充</span><code>#39c5cf</code></li>
+      <li><span class="chip" style="background:#4bcbd8"></span><span class="nm">链接</span><code>#4bcbd8</code></li>
+      <li><span class="chip" style="background:#16272f"></span><span class="nm">对话气泡</span><code>#16272f</code></li>
+      <li><span class="chip" style="background:#264049"></span><span class="nm">气泡强调</span><code>#264049</code></li>
+      <li><span class="chip" style="background:#101d24"></span><span class="nm">代码块</span><code>#101d24</code></li>
+      <li><span class="chip" style="background:#111c22"></span><span class="nm">行内代码</span><code>#111c22</code></li>
+      <li><span class="chip" style="background:#264049"></span><span class="nm">选中态</span><code>#264049</code></li>
+      <li><span class="chip" style="background:#1a3038"></span><span class="nm">悬停态</span><code>#1a3038</code></li>
+      <li><span class="chip" style="background:#1eb981"></span><span class="nm">成功</span><code>#1eb981</code></li>
+      <li><span class="chip" style="background:#e8a133"></span><span class="nm">警告</span><code>#e8a133</code></li>
+      <li><span class="chip" style="background:#f4629f"></span><span class="nm">错误 / 品红</span><code>#f4629f</code></li>
+      <li><span class="chip" style="background:#39c5cf"></span><span class="nm">Miku 青 #39c5cf</span><code>#39c5cf</code></li>
+      <li><span class="chip" style="background:#ea3f88"></span><span class="nm">Miku 品红</span><code>#ea3f88</code></li>
+    </ul>
+    <h2>组件示意</h2>
+    <div class="demo">
+      <div class="bubble">你好，今天想改点什么？</div>
+      <div class="bubble mine">把主题换成初音未来。</div>
+      <div class="state">
+        <span style="background:var(--dsw-alias-state-success-primary)">成功</span>
+        <span style="background:var(--dsw-alias-state-warn-primary)">警告</span>
+        <span style="background:var(--dsw-alias-state-error-primary)">错误</span>
+      </div>
+      <pre><b>const</b> theme = <i>'miku'</i><br>surface.<span class="tag">--dsw-static-blue-450</span></pre>
+      <p><button class="btn">主按钮</button> &nbsp; <a href="#">一个链接</a></p>
+    </div>
+  </section>
+</div></body></html>
